@@ -1,42 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { color } from './CambiarColor';
 
 export default function UseState() {
   const [contador, setContador] = useState(0);
   const [mostrar, setMostrar] = useState(false);
-  useEffect(()=>{
-        console.log("componente renderizado");
-  });
-  useEffect(()=>{
-    console.log("componente renderizado 1 vez");
-},[]);
-useEffect(()=>{
-    console.log("contador  o contenido actualizado");
-    console.log("contenido actualizado");
-    document.title =`Contador ${contador}`;
+  const colorFondo = useContext(color); // hook en nivel superior
 
-},[contador, mostrar]);
+  // Se ejecuta en cada render
+  useEffect(() => {
+    console.log("Componente renderizado");
+  });
+
+  // Se ejecuta solo una vez al montar
+  useEffect(() => {
+    console.log("Componente renderizado 1 vez");
+  }, []);
+
+  // Se ejecuta cuando cambia contador o mostrar
+  useEffect(() => {
+    console.log("Contador o mostrar actualizado");
+    document.title = `Contador ${contador}`;
+  }, [contador, mostrar]);
 
   return (
     <>
-      {mostrar ? (
+      {mostrar && (
         <>
-          <div>Contador: {contador}</div>
-
-          <button
-            onClick={() => {
-              setContador(contador + 1);
-              console.log(contador); // Nota: este valor se ve "atrasado" por cómo funciona React
+          <div
+            style={{
+              backgroundColor: colorFondo === "color-oscuro" ? "gray" : "white",
+              padding: "10px",
             }}
           >
-            Aumentar
-          </button>
+            <div>Contador: {contador}</div>
+            <button
+              onClick={() => {
+                setContador(contador + 1);
+              }}
+            >
+              Aumentar
+            </button>
+          </div>
         </>
-      ) : (
-        ""
       )}
-      
+
       <br />
-      
+
       <button onClick={() => setMostrar(!mostrar)}>
         Mostrar / Aumentar
       </button>
